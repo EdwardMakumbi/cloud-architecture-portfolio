@@ -1,38 +1,29 @@
-{\rtf1\ansi\ansicpg1252\cocoartf2867
-\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fswiss\fcharset0 Helvetica-Bold;\f1\fswiss\fcharset0 Helvetica;}
-{\colortbl;\red255\green255\blue255;}
-{\*\expandedcolortbl;;}
-\paperw11900\paperh16840\margl1440\margr1440\vieww11520\viewh8400\viewkind0
-\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+# Architecture Decisions – LiveDocApp
 
-\f0\b\fs24 \cf0 Architecture Decisions \'96 LiveDocApp
-\f1\b0 \
-\
+## Compute Layer
+- EC2 instances selected for flexibility and full control
+- Multi-AZ deployment for high availability
 
-\f0\b Compute Layer
-\f1\b0 \
-- EC2 instances chosen for flexibility and full control\
-- Multi-AZ deployment to ensure high availability\
-\
+## Load Balancing
+- Classic Load Balancer used for simplicity; ALB could be used for path-based routing in future
 
-\f0\b Load Balancing
-\f1\b0 \
-- Classic Load Balancer used for simplicity; could upgrade to ALB in future\
-\
+## CDN & Static Content
+- CloudFront selected to reduce latency for global users
+- S3 used for static assets to separate compute and storage
 
-\f0\b CDN
-\f1\b0 \
-- CloudFront selected to reduce latency for international users\
-- S3 static assets separate from compute to improve performance\
-\
+## Traffic Routing
+- Route 53 ensures global DNS-level traffic management
+- Health checks guarantee requests only go to healthy instances
 
-\f0\b Traffic Routing
-\f1\b0 \
-- Route 53 ensures DNS-level global traffic management\
-- Health checks ensure users are only routed to healthy instances\
-\
+## Security
+- Security Groups restrict inbound traffic to HTTP and specific SSH IPs
+- IAM roles replace hardcoded credentials
+- Network isolation within VPC for safety
 
-\f0\b Security
-\f1\b0 \
-- Security Groups restrict inbound traffic\
-- IAM roles used for S3 and EC2 access}
+## Auto Scaling
+- ASG ensures minimum capacity is always available
+- Automatically scales based on traffic load
+
+## Monitoring
+- CloudWatch monitors EC2 and ASG health
+- Provides alerting for system issues
